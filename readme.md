@@ -79,7 +79,7 @@ php index.php app:generate
 
 If you see this, **movies2sheet** isn't working.
 
-![Tests](/tests.png?raw=true "Tests")
+![Tests](https://github.com/MarceauKa/movies2sheet/blob/master/test.png?raw=true "Tests")
 
 ## Licence
 
