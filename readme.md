@@ -69,6 +69,18 @@ Old Boy;2003;2h0;FR,KO;FR;HD;No;2.45G;Park Chan-wook;...
 World War Z;2009;2h3;FR,EN;FR,EN;4k;Yes;5.65G;Marc Forster;...
 ```
 
+## Tests
+
+This app contains a lot of tests (Unit, Feature and Integration tests). Just run:
+
+```bash
+php index.php app:generate
+```
+
+If you see this, **movies2sheet** isn't working.
+
+![Tests](/tests.png?raw=true "Tests")
+
 ## Licence
 
 WTFPL - Do What The Fuck You Want To Public License.
