@@ -11,6 +11,8 @@ Movies2sheet will:
 - Get data from **FFMPEG** such as: duration, size, audio tracks, subtitles, etc
 - Get data from [SensCritique.com](https://www.senscritique.com) such as: director, actors, genre, poster, resume, etc
 
+This package is for my own usage (developped in about 2 hours) but I share it with all of you with ♥️
+
 ## Requirements
 
 - PHP >= 7.2
