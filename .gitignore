@@ -1,6 +1,4 @@
 .env
 .idea/
 composer.lock
-cache/
-exports/
 vendor/

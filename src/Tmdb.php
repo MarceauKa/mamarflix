@@ -38,6 +38,64 @@ class Tmdb
         $this->getMovieInfos();
     }
 
+    public function getTitle(): string
+    {
+        return $this->infos['title'] ?? '';
+    }
+
+    public function getOriginalTitle(): string
+    {
+        return $this->infos['original_title'] ?? '';
+    }
+
+    public function getVoteAverage(): string
+    {
+        $note = $this->infos['vote_average'] ?? 0;
+
+        return number_format((float)$note, 2, '.', '');
+    }
+
+    public function getPosterUrl(): ?string
+    {
+        $poster = $this->infos['poster_path'] ?? null;
+
+        if ($poster) {
+            $poster = sprintf('https://image.tmdb.org/t/p/w780/%s', $poster);
+
+            $filename = sprintf('images/%s.jpg', $this->movie->getSlug());
+
+            if (false === file_exists($filename)) {
+                file_put_contents($filename, file_get_contents($poster));
+            }
+        }
+
+        return $poster;
+    }
+
+    public function getReleaseDate(): string
+    {
+        return $this->infos['release_date'] ?? '';
+    }
+
+    public function getResume(): string
+    {
+        return $this->infos['overview'] ?? '';
+    }
+
+    public function getGenres(): array
+    {
+        $ids = $this->infos['genre_ids'] ?? [];
+        $genres = [];
+
+        foreach ($ids as $id) {
+            if (array_key_exists($id, self::GENRES)) {
+                $genres[] = self::GENRES[$id];
+            }
+        }
+
+        return $genres;
+    }
+
     protected function getMovieInfos(): self
     {
         $cacheKey = $this->movie->getSlug() . '.tmdb';

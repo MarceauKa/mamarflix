@@ -60,18 +60,14 @@ class CsvWriter
     public function write(): self
     {
         if (count($this->lines) > 0) {
-            $content = '';
-
-            if ($this->headers) {
-                $content .= $this->headers . $this->newline;
-            }
-
-            $content .= implode($this->newline, $this->lines);
+            $content = implode($this->newline, $this->lines);
 
             file_put_contents($this->path(), $content);
 
             return $this;
         }
+
+        return $this;
     }
 
     protected function path(): string

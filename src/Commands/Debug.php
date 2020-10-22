@@ -44,13 +44,22 @@ class Debug extends Command
         $table = new Table($output);
 
         $table->addRow(['Name', $movie->getName()]);
-        $table->addRow(['Fichier', $movie->getFfprobe()->getSize()]);
-        $table->addRow(['Durée', $movie->getFfprobe()->getDuration()]);
+        $table->addRow(['File', $movie->getFfprobe()->getSize()]);
+        $table->addRow(['Duration', $movie->getFfprobe()->getDuration()]);
         $table->addRow(['Format', $movie->getFfprobe()->getVideoFormat()]);
         $table->addRow(['HDR', $movie->getFfprobe()->getVideoHasHdr() ? 'Oui' : 'Non']);
         $table->addRow(['Audio', implode(', ', $movie->getFfprobe()->getAudioTracks())]);
         $table->addRow(['Subtitles', implode(', ', $movie->getFfprobe()->getSubtitleTracks())]);
+        $table->addRow(['Title', $movie->getTmdb()->getTitle()]);
+        $table->addRow(['Original title', $movie->getTmdb()->getOriginalTitle()]);
+        $table->addRow(['Release date', $movie->getTmdb()->getReleaseDate()]);
+        $table->addRow(['Genres', implode(', ', $movie->getTmdb()->getGenres())]);
+        $table->addRow(['Note', $movie->getTmdb()->getVoteAverage()]);
+        $table->addRow(['Resume', $movie->getTmdb()->getResume()]);
+        $table->addRow(['Poster', $movie->getTmdb()->getPosterUrl()]);
 
         $table->render();
+
+        return 0;
     }
 }

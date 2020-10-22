@@ -49,12 +49,20 @@ class Tmdb extends Command
             $output->writeln('Generating a CSV export');
 
             $csv = new CsvWriter('tmdb');
-            $csv->headers(['Name', 'File']);
+            $csv->headers(['Name', 'File', 'Title', 'Original title', 'Release date', 'Genres', 'Note', 'Poster']);
 
             foreach ($files as $movie) {
+                $tmdb = $movie->getTmdb();
+
                 $csv->addLine([
                     $movie->getName(),
                     $movie->getFilename(),
+                    $tmdb->getTitle(),
+                    $tmdb->getOriginalTitle(),
+                    $tmdb->getReleaseDate(),
+                    implode(', ', $tmdb->getGenres()),
+                    $tmdb->getVoteAverage(),
+                    $tmdb->getPosterUrl(),
                 ]);
             }
 
@@ -63,5 +71,7 @@ class Tmdb extends Command
         }
 
         $output->writeln('Done!');
+
+        return 0;
     }
 }

@@ -69,13 +69,13 @@ class Ffprobe
             return false;
         }
 
-        return $video['bits_per_raw_sample'] == 8;
+        return $this->findFirstKeyIn($video, ['bits_per_raw_sample'], 8) == 8;
     }
 
     public function getAudioTracks(): array
     {
         return $this->getAudioStreams()->transform(function ($audio) {
-            $layout = $audio['channel_layout'];
+            $layout = $this->findFirstKeyIn($audio, ['channel_layout'], null);
 
             if (preg_match('/\d\.\d/', $layout)) {
                 $layout = substr($layout, 0, 3);
