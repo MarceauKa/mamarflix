@@ -4,8 +4,7 @@ namespace App;
 
 class Env
 {
-    /** @var array $vars */
-    protected static $vars;
+    protected static ?array $vars = null;
 
     public static function get(string $key, $default = null): ?string
     {

@@ -1,14 +1,13 @@
 <?php
 
-use App\Commands\GenerateCommand;
-use App\Commands\ListCommand;
 use Symfony\Component\Console\Application;
 
 require 'vendor/autoload.php';
 
 $application = new Application();
 
-$application->add(new ListCommand());
-$application->add(new GenerateCommand());
+$application->add(new \App\Commands\Overview);
+$application->add(new \App\Commands\Debug);
+$application->add(new \App\Commands\Ffprobe);
 
 $application->run();

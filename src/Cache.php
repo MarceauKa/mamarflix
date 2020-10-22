@@ -4,8 +4,7 @@ namespace App;
 
 class Cache
 {
-    /** @var string $path */
-    public static $path;
+    public static string $path = '';
 
     public static function has(string $key): bool
     {
@@ -32,6 +31,6 @@ class Cache
             }
         }
 
-        return self::$path . str_replace(['\'', '.', ' ', '/', '\\', ':', '&', '?', '=', ',', ';', '[', ']', '(', ')', 'ç', 'à', '+', '&'], '', $key);
+        return self::$path . str_replace(['\'', ' ', '/', '\\', ':', '&', '?', '=', ',', ';', '[', ']', '(', ')', 'ç', 'à', '+', '&'], '', $key);
     }
 }
