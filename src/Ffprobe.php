@@ -15,40 +15,6 @@ class Ffprobe
         $this->getFileInfos();
     }
 
-    protected function getFileInfos(): self
-    {
-        $cacheKey = $this->movie->getSlug() . '.ffprobe';
-
-        if (Cache::has($cacheKey)) {
-            $infos = Cache::get($cacheKey);
-            $this->infos = Collection::make(json_decode($infos, true));
-
-            return $this;
-        }
-
-        $command = vsprintf('%s %s %s', [
-            Env::get('FFPROBE_BIN'),
-            '-loglevel quiet -show_format -show_streams -print_format json',
-            escapeshellarg($this->movie->getPath())
-        ]);
-
-        $infos = shell_exec($command);
-
-        if (empty($infos)) {
-            throw new \RuntimeException("Can't get infos for {$this->movie->getPath()}");
-        }
-
-        Cache::set($cacheKey, $infos);
-
-        try {
-            $this->infos = Collection::make(json_decode($infos, true));
-        } catch (\Exception $e) {
-            throw new \RuntimeException("Can't decode JSON infos from {$this->movie->getPath()}");
-        }
-
-        return $this;
-    }
-
     public function getSize(): ?string
     {
         $size = $this->infos['format']['size'];
@@ -138,6 +104,40 @@ class Ffprobe
 
             return $this->replaceLangCode($lang);
         })->values()->toArray();
+    }
+
+    protected function getFileInfos(): self
+    {
+        $cacheKey = $this->movie->getSlug() . '.ffprobe';
+
+        if (Cache::has($cacheKey)) {
+            $infos = Cache::get($cacheKey);
+            $this->infos = Collection::make(json_decode($infos, true));
+
+            return $this;
+        }
+
+        $command = vsprintf('%s %s %s', [
+            Env::get('FFPROBE_BIN'),
+            '-loglevel quiet -show_format -show_streams -print_format json',
+            escapeshellarg($this->movie->getPath())
+        ]);
+
+        $infos = shell_exec($command);
+
+        if (empty($infos)) {
+            throw new \RuntimeException("Can't get infos for {$this->movie->getPath()}");
+        }
+
+        Cache::set($cacheKey, $infos);
+
+        try {
+            $this->infos = Collection::make(json_decode($infos, true));
+        } catch (\Exception $e) {
+            throw new \RuntimeException("Can't decode JSON infos from {$this->movie->getPath()}");
+        }
+
+        return $this;
     }
 
     protected function replaceLangCode($code): ?string

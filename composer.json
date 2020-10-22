@@ -14,7 +14,8 @@
     "symfony/console": "5.1.*",
     "symfony/finder": "5.1.*",
     "illuminate/collections": "^8.0",
-    "illuminate/support": "^8.0"
+    "illuminate/support": "^8.0",
+    "guzzlehttp/guzzle": "^7.1@dev"
   },
   "autoload": {
     "psr-4": {
