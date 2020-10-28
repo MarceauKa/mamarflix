@@ -3,10 +3,7 @@
 namespace App\Tmdb;
 
 use App\Movie;
-use App\Utils\Env;
-use App\Utils\Cache;
-use GuzzleHttp\Client;
-use Psr\Http\Message\ResponseInterface;
+use App\Utils\TmdbDb;
 
 class Tmdb
 {
@@ -65,7 +62,8 @@ class Tmdb
         if ($poster) {
             $poster = sprintf('https://image.tmdb.org/t/p/w780/%s', $poster);
 
-            $filename = sprintf('images/%s.jpg', $this->movie->getSlug());
+            $name = sprintf('%s.jpg', $this->movie->getSlug());
+            $filename = base_path('data/images/' . $name);
 
             if (false === file_exists($filename)) {
                 file_put_contents($filename, file_get_contents($poster));
@@ -82,7 +80,9 @@ class Tmdb
 
     public function getResume(): string
     {
-        return $this->infos['overview'] ?? '';
+        $resume = $this->infos['overview'] ?? '';
+
+        return str_replace(["\n", '"'], '', $resume);
     }
 
     public function getGenres(): array
@@ -101,29 +101,17 @@ class Tmdb
 
     protected function getMovieInfos(): self
     {
-        $cacheKey = $this->movie->getSlug() . '.tmdb';
+        $id = TmdbDb::instance()->getId($this->movie->getSlug());
 
-        if (Cache::has($cacheKey)) {
-            $infos = Cache::get($cacheKey);
-            $this->infos = json_decode($infos, true);
-
-            return $this;
+        if ($id) {
+            $this->infos = (new RequestMovie($id))->get();
+        } else {
+            $this->infos = (new RequestSearch($this->movie->getName()))->get();
         }
 
-        $response = $this->makeRequest();
-        $body = (string)$response->getBody();
-
-        try {
-            $infos = json_decode($body, true);
-        } catch (\Exception $e) {
-            throw new \RuntimeException("Can't decode JSON infos from {$this->movie->getPath()}");
+        if (empty($this->infos)) {
+            throw new \InvalidArgumentException("Movie {$this->movie->getSlug()} not found");
         }
-        if (array_key_exists('results', $infos) && count($infos['results']) >= 1) {
-            $infos = $infos['results'][0];
-        }
-
-        $this->infos = $infos ?? [];
-        Cache::set($cacheKey, json_encode($this->infos));
 
         return $this;
     }

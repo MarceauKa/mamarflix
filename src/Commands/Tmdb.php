@@ -4,12 +4,14 @@ namespace App\Commands;
 
 use App\Movie;
 use App\Utils\CsvWriter;
+use App\Utils\TmdbDb;
 use App\Utils\VolumeReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\Console\Question\Question;
 
 class Tmdb extends Command
 {
@@ -37,7 +39,23 @@ class Tmdb extends Command
         $bar->start();
 
         foreach ($volume->files() as $movie) {
-            $movie->getTmdb();
+            try {
+                $movie->getTmdb();
+            } catch (\InvalidArgumentException $e) {
+                $helper = $this->getHelper('question');
+                $text = sprintf('Please enter TMDb id for the move %s?', $movie->getName());
+                $question = new Question($text, false);
+                $output->writeln('');
+                $answer = $helper->ask($input, $output, $question);
+
+                if ($answer) {
+                    TmdbDb::instance()->setId($movie->getSlug(), (int)$answer);
+                    $movie->getTmdb(true);
+                } else {
+                    return Command::FAILURE;
+                }
+            }
+
             $files[] = $movie;
             $bar->advance();
         }
@@ -49,7 +67,7 @@ class Tmdb extends Command
             $output->writeln('Generating a CSV export');
 
             $csv = new CsvWriter('tmdb');
-            $csv->headers(['Name', 'File', 'Title', 'Original title', 'Release date', 'Genres', 'Note', 'Poster']);
+            $csv->headers(['Name', 'File', 'Title', 'Original title', 'Release date', 'Resume', 'Genres', 'Note', 'Poster']);
 
             foreach ($files as $movie) {
                 $tmdb = $movie->getTmdb();
@@ -60,6 +78,7 @@ class Tmdb extends Command
                     $tmdb->getTitle(),
                     $tmdb->getOriginalTitle(),
                     $tmdb->getReleaseDate(),
+                    $tmdb->getResume(),
                     implode(', ', $tmdb->getGenres()),
                     $tmdb->getVoteAverage(),
                     $tmdb->getPosterUrl(),

@@ -111,7 +111,7 @@ class Ffprobe
 
     protected function getFileInfos(): self
     {
-        $cacheKey = $this->movie->getSlug() . '.ffprobe';
+        $cacheKey = sprintf('ffprobe-%s.json', $this->movie->getSlug());
 
         if (Cache::has($cacheKey)) {
             $infos = Cache::get($cacheKey);

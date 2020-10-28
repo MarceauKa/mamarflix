@@ -2,11 +2,13 @@
 
 namespace App\Commands;
 
+use App\Utils\TmdbDb;
 use App\Utils\VolumeReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
 class Debug extends Command
@@ -20,6 +22,12 @@ class Debug extends Command
             'slug',
             InputArgument::REQUIRED,
             "Slug du film",
+        );
+        $this->addOption(
+            'tmdb',
+            null,
+            InputOption::VALUE_REQUIRED,
+            "Forcer un ID de TMDb pour ce film",
         );
     }
 
@@ -39,6 +47,12 @@ class Debug extends Command
         if (empty($movie)) {
             $output->writeln("Movie {$input->getArgument('slug')} not found");
             return;
+        }
+
+        if ($input->getOption('tmdb')) {
+            $id = $input->getOption('tmdb');
+            TmdbDb::instance()->setId($movie->getSlug(), $id);
+            $output->writeln("Forced ID $id for {$movie->getName()}");
         }
 
         $table = new Table($output);

@@ -54,9 +54,9 @@ class Movie
         return $this->ffprobe;
     }
 
-    public function getTmdb(): Tmdb
+    public function getTmdb(bool $fresh = false): Tmdb
     {
-        if ($this->tmdb) {
+        if ($this->tmdb && $fresh === false) {
             return $this->tmdb;
         }
 
