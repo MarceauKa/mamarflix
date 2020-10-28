@@ -1,7 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Tmdb;
 
+use App\Movie;
+use App\Utils\Env;
+use App\Utils\Cache;
 use GuzzleHttp\Client;
 use Psr\Http\Message\ResponseInterface;
 
@@ -123,27 +126,5 @@ class Tmdb
         Cache::set($cacheKey, json_encode($this->infos));
 
         return $this;
-    }
-
-    protected function makeRequest(): ResponseInterface
-    {
-        $client = new Client([
-            'headers' => [
-                'Accept' => 'application/json',
-            ]
-        ]);
-
-        $base = 'https://api.themoviedb.org/3/search/movie';
-
-        $query = http_build_query([
-            'api_key' => Env::get('TMDB_KEY'),
-            'lang' => Env::get('TMDB_LANG'),
-            'query' => $this->movie->getName(),
-            'page' => 1,
-        ]);
-
-        $url = sprintf('%s?%s', $base, $query);
-
-        return $client->get($url);
     }
 }

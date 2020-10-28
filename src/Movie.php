@@ -2,6 +2,8 @@
 
 namespace App;
 
+use App\Ffprobe\Ffprobe;
+use App\Tmdb\Tmdb;
 use Illuminate\Support\Str;
 
 class Movie

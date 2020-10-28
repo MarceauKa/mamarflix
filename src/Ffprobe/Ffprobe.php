@@ -1,7 +1,10 @@
 <?php
 
-namespace App;
+namespace App\Ffprobe;
 
+use App\Movie;
+use App\Utils\Cache;
+use App\Utils\Env;
 use Illuminate\Support\Collection;
 
 class Ffprobe

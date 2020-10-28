@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Utils;
 
 class CsvWriter
 {
@@ -70,14 +70,14 @@ class CsvWriter
         return $this;
     }
 
-    protected function path(): string
+    public function path(): string
     {
-        $dir = __DIR__ . '/../exports/';
+        $dir = base_path('data/exports/');
 
         if (false === is_dir($dir)) {
             mkdir($dir);
         }
 
-        return $dir . $this->filename;
+        return sprintf('%s/%s', $dir, $this->filename);
     }
 }

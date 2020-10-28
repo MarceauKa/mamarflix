@@ -2,8 +2,8 @@
 
 namespace App\Commands;
 
-use App\Env;
-use App\VolumeReader;
+use App\Utils\Env;
+use App\Utils\VolumeReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;

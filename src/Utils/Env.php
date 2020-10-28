@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Utils;
 
 class Env
 {
@@ -38,13 +38,13 @@ class Env
 
     protected static function file()
     {
-        $path = __DIR__ . '/../.env';
+        $path = base_path('.env');
 
         if (file_exists($path)) {
             return file_get_contents($path);
         }
 
-        if (file_put_contents($path, file_get_contents(__DIR__.'/../.env.example'))) {
+        if (file_put_contents($path, file_get_contents(base_path('.env.example')))) {
             return self::file();
         }
 

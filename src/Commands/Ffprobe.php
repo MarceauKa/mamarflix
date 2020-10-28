@@ -2,9 +2,9 @@
 
 namespace App\Commands;
 
-use App\CsvWriter;
 use App\Movie;
-use App\VolumeReader;
+use App\Utils\CsvWriter;
+use App\Utils\VolumeReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;

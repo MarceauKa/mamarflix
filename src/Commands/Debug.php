@@ -2,7 +2,7 @@
 
 namespace App\Commands;
 
-use App\VolumeReader;
+use App\Utils\VolumeReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputArgument;

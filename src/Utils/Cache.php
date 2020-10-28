@@ -1,6 +1,6 @@
 <?php
 
-namespace App;
+namespace App\Utils;
 
 class Cache
 {
@@ -24,7 +24,7 @@ class Cache
     protected static function path(string $key)
     {
         if (empty(self::$path)) {
-            self::$path = __DIR__ . '/../cache/';
+            self::$path = base_path('data/cache/');
 
             if (false === is_dir(self::$path)) {
                 mkdir(self::$path);

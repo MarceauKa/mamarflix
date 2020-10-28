@@ -1,7 +1,8 @@
 <?php
 
-namespace App;
+namespace App\Utils;
 
+use App\Movie;
 use Symfony\Component\Finder\Finder;
 
 class VolumeReader
