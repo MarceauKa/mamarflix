@@ -17,3 +17,15 @@ function base_path(?string $file) {
 
     return sprintf('%s/%s', $base, $file);
 }
+
+function values_dumper($value) {
+    if (is_array($value)) {
+        return implode(', ', $value);
+    }
+
+    if (is_bool($value)) {
+        return $value ? 'Yes' : 'No';
+    }
+
+    return $value;
+}

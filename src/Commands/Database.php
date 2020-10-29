@@ -42,7 +42,7 @@ class Database extends Command
         $csv = new CsvWriter('database');
         $csv->headers([
             'File',
-            'Title', 'Original title', 'Release date', 'Resume', 'Genres', 'Note', 'Poster',
+            'Title', 'Original title', 'Release date', 'Resume', 'Genres', 'Note', 'Poster', 'Casting',
             'Size', 'Duration', 'Format', 'HDR', 'Audio', 'Subtitles',
         ]);
 
@@ -52,19 +52,8 @@ class Database extends Command
 
             $csv->addLine([
                 $movie->getFilename(),
-                $tmdb->getTitle(),
-                $tmdb->getOriginalTitle(),
-                $tmdb->getReleaseDate(),
-                $tmdb->getResume(),
-                implode(', ', $tmdb->getGenres()),
-                $tmdb->getVoteAverage(),
-                $tmdb->getPosterUrl(),
-                $ffprobe->getSize(),
-                $ffprobe->getDuration(),
-                $ffprobe->getVideoFormat(),
-                $ffprobe->getVideoHasHdr() ? 'Oui' : 'Non',
-                implode(', ', $ffprobe->getAudioTracks()),
-                implode(', ', $ffprobe->getSubtitleTracks()),
+                ...array_map('values_dumper', array_values($tmdb->toArray())),
+                ...array_map('values_dumper', array_values($ffprobe->toArray())),
             ]);
         }
 

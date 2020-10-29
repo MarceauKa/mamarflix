@@ -46,7 +46,7 @@ class Debug extends Command
 
         if (empty($movie)) {
             $output->writeln("Movie {$input->getArgument('slug')} not found");
-            return;
+            return Command::FAILURE;
         }
 
         if ($input->getOption('tmdb')) {
@@ -55,25 +55,17 @@ class Debug extends Command
             $output->writeln("Forced ID $id for {$movie->getName()}");
         }
 
-        $table = new Table($output);
+        $data = array_merge(
+            ['file' => $movie->getFilename()],
+            $movie->getFfprobe()->toArray(),
+            $movie->getTmdb()->toArray()
+        );
 
-        $table->addRow(['Name', $movie->getName()]);
-        $table->addRow(['File', $movie->getFfprobe()->getSize()]);
-        $table->addRow(['Duration', $movie->getFfprobe()->getDuration()]);
-        $table->addRow(['Format', $movie->getFfprobe()->getVideoFormat()]);
-        $table->addRow(['HDR', $movie->getFfprobe()->getVideoHasHdr() ? 'Oui' : 'Non']);
-        $table->addRow(['Audio', implode(', ', $movie->getFfprobe()->getAudioTracks())]);
-        $table->addRow(['Subtitles', implode(', ', $movie->getFfprobe()->getSubtitleTracks())]);
-        $table->addRow(['Title', $movie->getTmdb()->getTitle()]);
-        $table->addRow(['Original title', $movie->getTmdb()->getOriginalTitle()]);
-        $table->addRow(['Release date', $movie->getTmdb()->getReleaseDate()]);
-        $table->addRow(['Genres', implode(', ', $movie->getTmdb()->getGenres())]);
-        $table->addRow(['Note', $movie->getTmdb()->getVoteAverage()]);
-        $table->addRow(['Resume', $movie->getTmdb()->getResume()]);
-        $table->addRow(['Poster', $movie->getTmdb()->getPosterUrl()]);
+        foreach ($data as $key => $value) {
+            $output->writeln(sprintf('<info>%s</info>', ucfirst($key)));
+            $output->writeln(values_dumper($value));
+        }
 
-        $table->render();
-
-        return 0;
+        return Command::SUCCESS;
     }
 }

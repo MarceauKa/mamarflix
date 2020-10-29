@@ -1,23 +1,25 @@
 # Movies2sheet
 
-**Movies2sheet** is a command line tool useful to transform a list of movies into a CSV file.
+Transform your **own device full of movies** in your own **\*\*\*flix**.
 
 ## Use case
 
-I downloaded (legally 🙃) several movies and put them into a **Volume** (usually, an external drive).
-Now, I want a CSV file containing all of my downloaded movies, plus, additional metadata.
+You have a **Volume** (External hard drive, for example) full of movies? This app will transform it in your own web platform.
 
-Movies2sheet will:
-__TODO__
+It will:
+- Get file infos (size, duration, format, HDR, audio and subtitles)
+- Get movie infos (title, original title, release date, casting, resume, poster, etc)
+- Dump all of these infos into a CSV and a JSON database
+- Generate a web interface to browse your movies
 
-This package is for my own usage (developped in about 2 hours) but I share it with all of you with ♥️
+This package is for my own usage but I share it with all of you with ♥️
 
 ## Requirements
 
 - PHP >= 7.4
 - Composer
 - FFPROBE
-- An TMDb API Key
+- A TMDb API Key
 
 ### File names
 
@@ -48,9 +50,9 @@ Open the `.env` file then edit:
 | FFPROBE_BIN |  |
 | API_KEY |  |
 
-## Commandes
+## Commands
 
-Les commandes se lancent par la commande de base : `php index.php [COMMAND]`
+Launch a command: `php index.php [COMMAND]`
 
 | Commande | Description | Options |
 |----------|-------------|---------|

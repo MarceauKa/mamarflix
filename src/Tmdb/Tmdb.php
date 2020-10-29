@@ -7,28 +7,6 @@ use App\Utils\TmdbDb;
 
 class Tmdb
 {
-    public const GENRES = [
-        28 => "Action",
-        12 => "Aventure",
-        16 => "Animation",
-        35 => "Comédie",
-        80 => "Crime",
-        99 => "Documentaire",
-        18 => "Drame",
-        10751 => "Familial",
-        14 => "Fantastique",
-        36 => "Histoire",
-        27 => "Horreur",
-        10402 => "Musique",
-        9648 => "Mystère",
-        10749 => "Romance",
-        878 => "Science-Fiction",
-        10770 => "Téléfilm",
-        53 => "Thriller",
-        10752 => "Guerre",
-        37 => "Western"
-    ];
-
     public Movie $movie;
     public ?array $infos = [];
     public ?array $choices = [];
@@ -91,16 +69,42 @@ class Tmdb
 
     public function getGenres(): array
     {
-        $ids = $this->infos['genre_ids'] ?? [];
         $genres = [];
 
-        foreach ($ids as $id) {
-            if (array_key_exists($id, self::GENRES)) {
-                $genres[] = self::GENRES[$id];
-            }
+        foreach ($this->infos['genres'] ?? [] as $genre) {
+            $genres[] = $genre['name'];
         }
 
         return $genres;
+    }
+
+    public function getCasts(): array
+    {
+        $castsInfos = $this->infos['casts'] ?? [];
+        $casts = $castsInfos['cast'] ?? [];
+        $casting = [];
+
+        foreach (array_splice($casts, 0, 5) as $cast) {
+            $character = str_replace('"', '', $cast['character']);
+            $name = str_replace('"', '', $cast['name']);
+            $casting[] = sprintf('%s (%s)', $name, $character);
+        }
+
+        return $casting;
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'title' => $this->getTitle(),
+            'original_title' => $this->getOriginalTitle(),
+            'date' => $this->getReleaseDate(),
+            'resume' => $this->getResume(),
+            'genres' => $this->getGenres(),
+            'note' => $this->getVoteAverage(),
+            'poster' => $this->getPosterUrl(),
+            'casting' => $this->getCasts(),
+        ];
     }
 
     protected function getMovieInfos(): self

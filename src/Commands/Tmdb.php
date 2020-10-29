@@ -101,17 +101,9 @@ class Tmdb extends Command
             $csv->headers(['File', 'Title', 'Original title', 'Release date', 'Resume', 'Genres', 'Note', 'Poster']);
 
             foreach ($files as $movie) {
-                $tmdb = $movie->getTmdb();
-
                 $csv->addLine([
                     $movie->getFilename(),
-                    $tmdb->getTitle(),
-                    $tmdb->getOriginalTitle(),
-                    $tmdb->getReleaseDate(),
-                    $tmdb->getResume(),
-                    implode(', ', $tmdb->getGenres()),
-                    $tmdb->getVoteAverage(),
-                    $tmdb->getPosterUrl(),
+                    ...array_map('values_dumper', array_values($movie->getTmdb()->toArray()))
                 ]);
             }
 
@@ -121,6 +113,6 @@ class Tmdb extends Command
 
         $output->writeln('Done!');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

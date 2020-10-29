@@ -53,14 +53,8 @@ class Ffprobe extends Command
 
             foreach ($files as $movie) {
                 $csv->addLine([
-                    $movie->getName(),
                     $movie->getFilename(),
-                    $movie->getFfprobe()->getSize(),
-                    $movie->getFfprobe()->getDuration(),
-                    $movie->getFfprobe()->getVideoFormat(),
-                    $movie->getFfprobe()->getVideoHasHdr() ? 'Oui' : 'Non',
-                    implode(', ', $movie->getFfprobe()->getAudioTracks()),
-                    implode(', ', $movie->getFfprobe()->getSubtitleTracks()),
+                    ...array_map('values_dumper', array_values($movie->getFfprobe()->toArray())),
                 ]);
             }
 
@@ -70,6 +64,6 @@ class Ffprobe extends Command
 
         $output->writeln('Done!');
 
-        return 0;
+        return Command::SUCCESS;
     }
 }

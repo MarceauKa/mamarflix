@@ -10,7 +10,8 @@ use Illuminate\Support\Collection;
 class Ffprobe
 {
     public ?Movie $movie;
-    public ?Collection $infos;
+    public ?Collection $streams;
+    public ?Collection $format;
 
     public function __construct(Movie $movie)
     {
@@ -20,7 +21,7 @@ class Ffprobe
 
     public function getSize(): ?string
     {
-        $size = $this->infos['format']['size'];
+        $size = $this->format->get('size');
 
         if (empty($size)) {
             return null;
@@ -34,7 +35,7 @@ class Ffprobe
 
     public function getDuration(): ?string
     {
-        $duration = (int)$this->infos['format']['duration'];
+        $duration = (int)$this->format->get('duration');
 
         if (empty($duration)) {
             return null;
@@ -80,13 +81,13 @@ class Ffprobe
     public function getAudioTracks(): array
     {
         return $this->getAudioStreams()->transform(function ($audio) {
-            $layout = $this->findFirstKeyIn($audio, ['channel_layout'], null);
+            $title = $this->findFirstKeyIn(
+                $audio['tags'] ?? [],
+                ['title', 'name'],
+                null
+            );
 
-            if (preg_match('/\d\.\d/', $layout)) {
-                $layout = substr($layout, 0, 3);
-            }
-
-            $lang = $lang = $this->findFirstKeyIn(
+            $lang = $this->findFirstKeyIn(
                 $audio['tags'] ?? [],
                 ['lang', 'language', 'LANG', 'LANGUAGE'],
                 'N.C'
@@ -94,21 +95,49 @@ class Ffprobe
 
             $lang = $this->replaceLangCode($lang);
 
-            return sprintf('%s %s', $lang, $layout);
+            if ($title) {
+                return sprintf('%s - %s', $lang, trim($title));
+            }
+
+            return $lang;
         })->values()->toArray();
     }
 
     public function getSubtitleTracks(): array
     {
         return $this->getSubtitleStreams()->transform(function ($sub) {
+            $title = $this->findFirstKeyIn(
+                $sub['tags'] ?? [],
+                ['title', 'name'],
+                null
+            );
+
             $lang = $this->findFirstKeyIn(
                 $sub['tags'] ?? [],
                 ['lang', 'language', 'LANG', 'LANGUAGE'],
                 'N.C'
             );
 
-            return $this->replaceLangCode($lang);
+            $lang = $this->replaceLangCode($lang);
+
+            if ($title) {
+                return sprintf('%s - %s', $lang, trim($title));
+            }
+
+            return $lang;
         })->values()->toArray();
+    }
+
+    public function toArray(): array
+    {
+        return [
+            'size' => $this->getSize(),
+            'duration' => $this->getDuration(),
+            'format' => $this->getVideoFormat(),
+            'hdr' => $this->getVideoHasHdr(),
+            'audio' => $this->getAudioTracks(),
+            'subtitles' => $this->getSubtitleTracks(),
+        ];
     }
 
     protected function getFileInfos(): self
@@ -117,7 +146,7 @@ class Ffprobe
 
         if (Cache::has($cacheKey)) {
             $infos = Cache::get($cacheKey);
-            $this->infos = Collection::make(json_decode($infos, true));
+            $this->parseFileInfos($infos);
 
             return $this;
         }
@@ -137,10 +166,20 @@ class Ffprobe
         Cache::set($cacheKey, $infos);
 
         try {
-            $this->infos = Collection::make(json_decode($infos, true));
+            $this->parseFileInfos($infos);
         } catch (\Exception $e) {
             throw new \RuntimeException("Can't decode JSON infos from {$this->movie->getPath()}");
         }
+
+        return $this;
+    }
+
+    protected function parseFileInfos(string $infos): self
+    {
+        $infos = json_decode($infos, true);
+
+        $this->format = Collection::make($infos['format'] ?? []);
+        $this->streams = Collection::make($infos['streams'] ?? []);
 
         return $this;
     }
@@ -217,9 +256,7 @@ class Ffprobe
     protected function getVideoStream(): ?array
     {
         try {
-            $streams = Collection::make($this->infos['streams']);
-
-            $video = $streams->filter(function ($item) {
+            $video = $this->streams->filter(function ($item) {
                 return $item['codec_type'] === 'video';
             })->first();
         } catch (\Exception $e) {
@@ -232,9 +269,7 @@ class Ffprobe
     protected function getAudioStreams(): Collection
     {
         try {
-            $streams = Collection::make($this->infos['streams']);
-
-            $audios = $streams->filter(function ($item) {
+            $audios = $this->streams->filter(function ($item) {
                 return $item['codec_type'] === 'audio';
             })->values();
         } catch (\Exception $e) {
@@ -247,9 +282,7 @@ class Ffprobe
     protected function getSubtitleStreams(): Collection
     {
         try {
-            $streams = Collection::make($this->infos['streams']);
-
-            $subtitles = $streams->filter(function ($item) {
+            $subtitles = $this->streams->filter(function ($item) {
                 return $item['codec_type'] === 'subtitle';
             })->values();
         } catch (\Exception $e) {

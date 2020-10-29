@@ -39,7 +39,9 @@ class RequestMovie extends BaseRequest
 
     protected function getParams(): array
     {
-        return [];
+        return [
+            'append_to_response' => 'casts',
+        ];
     }
 
     protected function cacheKey(): string
