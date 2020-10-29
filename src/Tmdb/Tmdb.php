@@ -31,11 +31,15 @@ class Tmdb
 
     public Movie $movie;
     public ?array $infos = [];
+    public ?array $choices = [];
 
     public function __construct(Movie $movie)
     {
         $this->movie = $movie;
         $this->getMovieInfos();
+
+        // Download poster
+        $this->getPosterUrl();
     }
 
     public function getTitle(): string
@@ -105,13 +109,13 @@ class Tmdb
 
         if ($id) {
             $this->infos = (new RequestMovie($id))->get();
-        } else {
-            $this->infos = (new RequestSearch($this->movie->getName()))->get();
+            $this->choices = [];
+
+            return $this;
         }
 
-        if (empty($this->infos)) {
-            throw new \InvalidArgumentException("Movie {$this->movie->getSlug()} not found");
-        }
+        $this->infos = [];
+        $this->choices = (new RequestSearch($this->movie->getName()))->get();
 
         return $this;
     }

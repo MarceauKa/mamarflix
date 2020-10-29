@@ -28,11 +28,11 @@ class RequestSearch extends BaseRequest
             return null;
         }
 
-        $result = $result['results'][0];
+        $results = $result['results'];
 
-        $this->setCache($result);
+        $this->setCache($results);
 
-        return $result;
+        return $results;
     }
 
     protected function getUri(): string

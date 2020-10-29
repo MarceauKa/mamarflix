@@ -60,7 +60,7 @@ class Ffprobe
         } else if ($width >= 1200) {
             return '720p';
         } else {
-            return sprintf('%sx%s', $width, $this->findFirstKeyIn($video, ['height'], 0));
+            return 'SD';
         }
     }
 
@@ -72,7 +72,9 @@ class Ffprobe
             return false;
         }
 
-        return $this->findFirstKeyIn($video, ['bits_per_raw_sample'], 8) == 8;
+        $colors = $this->findFirstKeyIn($video, ['color_space', 'color_primaries'], 'bt');
+
+        return stripos($colors, 'bt2020') === 0;
     }
 
     public function getAudioTracks(): array

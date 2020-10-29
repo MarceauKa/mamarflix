@@ -8,6 +8,7 @@ use App\Utils\TmdbDb;
 use App\Utils\VolumeReader;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
+use Symfony\Component\Console\Helper\Table;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
@@ -39,21 +40,51 @@ class Tmdb extends Command
         $bar->start();
 
         foreach ($volume->files() as $movie) {
-            try {
-                $movie->getTmdb();
-            } catch (\InvalidArgumentException $e) {
-                $helper = $this->getHelper('question');
-                $text = sprintf('Please enter TMDb id for the move %s?', $movie->getName());
-                $question = new Question($text, false);
-                $output->writeln('');
-                $answer = $helper->ask($input, $output, $question);
+            $tmdb = $movie->getTmdb();
 
-                if ($answer) {
-                    TmdbDb::instance()->setId($movie->getSlug(), (int)$answer);
-                    $movie->getTmdb(true);
+            if (count($tmdb->choices) > 0) {
+                $output->writeln('');
+
+                $table = new Table($output);
+                $table->setHeaders(['ID', 'Title', 'Original title', 'Release']);
+
+                $choices = [];
+
+                foreach ($tmdb->choices as $choice) {
+                    $choices[] = [
+                        $choice['id'],
+                        $choice['title'],
+                        $choice['original_title'],
+                        $choice['release_date']
+                    ];
+                }
+
+                $table->setRows($choices);
+                $table->render();
+            }
+
+            if (count($tmdb->infos) === 0) {
+
+                if (count($tmdb->choices) > 1) {
+                    $helper = $this->getHelper('question');
+                    $default = count($tmdb->choices) > 0 ? $tmdb->choices[0]['id'] : false;
+                    $text = sprintf('Please enter TMDb id for the movie %s (default: %s)?', $movie->getFilename(), $default ?? '?');
+                    $question = new Question($text, $default);
+
+                    $output->writeln('');
+                    $answer = $helper->ask($input, $output, $question);
                 } else {
+                    $answer = $tmdb->choices[0]['id'];
+                    $output->writeln(sprintf('Movie %s set to %d', $movie->getFilename(), $answer));
+                }
+
+                if (empty($answer)) {
                     return Command::FAILURE;
                 }
+
+                TmdbDb::instance()->setId($movie->getSlug(), (int)$answer);
+                $movie->getTmdb(true);
+                $output->writeln('');
             }
 
             $files[] = $movie;
@@ -67,13 +98,12 @@ class Tmdb extends Command
             $output->writeln('Generating a CSV export');
 
             $csv = new CsvWriter('tmdb');
-            $csv->headers(['Name', 'File', 'Title', 'Original title', 'Release date', 'Resume', 'Genres', 'Note', 'Poster']);
+            $csv->headers(['File', 'Title', 'Original title', 'Release date', 'Resume', 'Genres', 'Note', 'Poster']);
 
             foreach ($files as $movie) {
                 $tmdb = $movie->getTmdb();
 
                 $csv->addLine([
-                    $movie->getName(),
                     $movie->getFilename(),
                     $tmdb->getTitle(),
                     $tmdb->getOriginalTitle(),
