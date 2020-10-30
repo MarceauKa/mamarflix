@@ -42,7 +42,7 @@ class Tmdb
         $poster = $this->infos['poster_path'] ?? null;
 
         if ($poster) {
-            $poster = sprintf('https://image.tmdb.org/t/p/w780/%s', $poster);
+            $poster = sprintf('https://image.tmdb.org/t/p/w780%s', $poster);
 
             $name = sprintf('%s.jpg', $this->movie->getSlug());
             $filename = base_path('data/images/' . $name);
@@ -64,7 +64,11 @@ class Tmdb
     {
         $resume = $this->infos['overview'] ?? '';
 
-        return str_replace(["\n", '"'], '', $resume);
+        return str_replace(
+            ['"', "\n", "\r", "\t"],
+            ['', ' ', ' ', ' '],
+            $resume
+        );
     }
 
     public function getGenres(): array
