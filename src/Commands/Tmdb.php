@@ -64,10 +64,10 @@ class Tmdb extends Command
             }
 
             if (count($tmdb->infos) === 0) {
+                $default = count($tmdb->choices) > 0 ? $tmdb->choices[0]['id'] : false;
 
-                if (count($tmdb->choices) > 1) {
+                if (count($tmdb->choices) > 1 || empty($default)) {
                     $helper = $this->getHelper('question');
-                    $default = count($tmdb->choices) > 0 ? $tmdb->choices[0]['id'] : false;
                     $text = sprintf('Please enter TMDb id for the movie %s (default: %s)?', $movie->getFilename(), $default ?? '?');
                     $question = new Question($text, $default);
 
@@ -85,6 +85,8 @@ class Tmdb extends Command
                 TmdbDb::instance()->setId($movie->getSlug(), (int)$answer);
                 $movie->getTmdb(true);
                 $output->writeln('');
+            } else {
+                $output->writeln(sprintf('Existing movie %s (%d)', $movie->getFilename(), $tmdb->getId()));
             }
 
             $files[] = $movie;

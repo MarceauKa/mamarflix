@@ -20,14 +20,19 @@ class Tmdb
         $this->getPosterUrl();
     }
 
-    public function getTitle(): string
+    public function getId(): ?int
     {
-        return $this->infos['title'] ?? '';
+        return $this->infos['id'] ?? null;
     }
 
-    public function getOriginalTitle(): string
+    public function getTitle(): ?string
     {
-        return $this->infos['original_title'] ?? '';
+        return $this->infos['title'] ?? null;
+    }
+
+    public function getOriginalTitle(): ?string
+    {
+        return $this->infos['original_title'] ?? null;
     }
 
     public function getVoteAverage(): string
@@ -55,9 +60,9 @@ class Tmdb
         return $poster;
     }
 
-    public function getReleaseDate(): string
+    public function getReleaseDate(): ?string
     {
-        return $this->infos['release_date'] ?? '';
+        return $this->infos['release_date'] ?? null;
     }
 
     public function getResume(): string
