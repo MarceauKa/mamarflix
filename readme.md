@@ -48,14 +48,16 @@ Open the `.env` file then edit:
 | VOLUME_PATH |  |
 | EXTENSIONS |  |
 | FFPROBE_BIN |  |
+| API_LANG |  |
 | API_KEY |  |
 
 ## Commands
 
-Launch a command: `php index.php [COMMAND]`
+Launch a command: `php m2s [COMMAND]`
 
 | Commande | Description | Options |
 |----------|-------------|---------|
+| `frontend` | Lance l'interface web | 
 | `overview` | Liste les films du volume | 
 | `ffprobe` | Génére les infos ffprobe de chaque film dans le volume | `--export` (ou `-e`) : Génère un fichier d'export au format .csv |
 | `tmdb` | Génére les infos TMDb de chaque film dans le volume | `--export` (ou `-e`) : Génère un fichier d'export au format .csv |

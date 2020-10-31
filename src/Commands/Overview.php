@@ -11,7 +11,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 
 class Overview extends Command
 {
-    protected static $defaultName = 'list';
+    protected static $defaultName = 'overview';
 
     protected function configure()
     {

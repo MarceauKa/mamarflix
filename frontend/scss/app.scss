@@ -1,0 +1,51 @@
+@import url('https://fonts.googleapis.com/css?family=Nunito');
+$red: #dc1b27;
+$input-focus-border-color: $red;
+$input-focus-box-shadow: none;
+$input-bg: rgba(255, 255, 255, .3);
+$input-focus-bg: rgba(255, 255, 255, .7);
+$card-border-width: 0;
+@import '~bootstrap/scss/bootstrap';
+
+html,
+body {
+  min-height: 100vh;
+  width: 100%;
+}
+
+#app {
+  background: radial-gradient(#fff, #aaa);
+  background-size: 100vw 100vh;
+  min-height: 100vh;
+}
+
+.logo {
+  display: flex;
+  justify-content: center;
+}
+
+.card {
+  .card-body {
+    height: 100%;
+  }
+}
+
+.movie-info {
+  .blockquote {
+    font-size: .75rem;
+    text-align: justify;
+  }
+}
+
+.movie-list-item {
+
+}
+
+.movie-grid-item {
+  cursor: pointer;
+  transition: transform .2s linear;
+
+  &:hover {
+    transform: scale(1.1);
+  }
+}
