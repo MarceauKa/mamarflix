@@ -48,9 +48,7 @@ class Tmdb
 
         if ($poster) {
             $poster = sprintf('https://image.tmdb.org/t/p/w780%s', $poster);
-
-            $name = sprintf('%s.jpg', $this->movie->getSlug());
-            $filename = base_path('data/images/' . $name);
+            $filename = base_path($this->getPosterFile());
 
             if (false === file_exists($filename)) {
                 file_put_contents($filename, file_get_contents($poster));
@@ -58,6 +56,11 @@ class Tmdb
         }
 
         return $poster;
+    }
+
+    public function getPosterFile(): string
+    {
+        return sprintf('data/images/%s.jpg', $this->movie->getSlug());
     }
 
     public function getReleaseDate(): ?string
@@ -111,7 +114,8 @@ class Tmdb
             'resume' => $this->getResume(),
             'genres' => $this->getGenres(),
             'note' => $this->getVoteAverage(),
-            'poster' => $this->getPosterUrl(),
+            'poster_url' => $this->getPosterUrl(),
+            'poster_file' => $this->getPosterFile(),
             'casting' => $this->getCasts(),
         ];
     }

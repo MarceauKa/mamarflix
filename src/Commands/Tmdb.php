@@ -42,6 +42,7 @@ class Tmdb extends Command
         foreach ($volume->files() as $movie) {
             $tmdb = $movie->getTmdb();
 
+            // Movie has choices
             if (count($tmdb->choices) > 0) {
                 $output->writeln('');
 
@@ -63,6 +64,7 @@ class Tmdb extends Command
                 $table->render();
             }
 
+            // Movie has no ID
             if (count($tmdb->infos) === 0) {
                 $default = count($tmdb->choices) > 0 ? $tmdb->choices[0]['id'] : false;
 
@@ -85,7 +87,9 @@ class Tmdb extends Command
                 TmdbDb::instance()->setId($movie->getSlug(), (int)$answer);
                 $movie->getTmdb(true);
                 $output->writeln('');
-            } else {
+            }
+            // Movie is existing
+            else {
                 $output->writeln(sprintf('Existing movie %s (%d)', $movie->getFilename(), $tmdb->getId()));
             }
 
