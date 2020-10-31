@@ -2,6 +2,8 @@
 
 Transform your **own device full of movies** in your own **\*\*\*flix**.
 
+⚠️ **UNDER ACTIVE DEVELOPMENT**
+
 ## Use case
 
 You have a **Volume** (External hard drive, for example) full of movies? This app will transform it in your own web platform.

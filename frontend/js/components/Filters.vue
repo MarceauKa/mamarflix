@@ -3,12 +3,12 @@
     <h6 class="mb-1">Affichage</h6>
     <div class="d-flex mb-3">
       <button class="btn btn-sm mr-2"
-              :class="{'btn-primary': display === 'grid', 'btn-secondary': display !== 'grid'}"
+              :class="{'btn-primary': display === 'grid', 'btn-outline-secondary': display !== 'grid'}"
               @click.prevent="display = 'grid'">
         Grille
       </button>
       <button class="btn btn-sm"
-              :class="{'btn-primary': display === 'list', 'btn-secondary': display !== 'list'}"
+              :class="{'btn-primary': display === 'list', 'btn-outline-secondary': display !== 'list'}"
               @click.prevent="display = 'list'">
         Liste
       </button>
@@ -17,17 +17,17 @@
     <h6 class="mb-1">Trier par</h6>
     <div class="mb-3">
       <button class="btn btn-sm btn-block"
-              :class="{'btn-primary': sort === 'name', 'btn-secondary': sort !== 'name'}"
+              :class="{'btn-primary': sort === 'name', 'btn-outline-secondary': sort !== 'name'}"
               @click.prevent="sort = 'name'">
         Nom
       </button>
       <button class="btn btn-sm btn-block mr-2"
-              :class="{'btn-primary': sort === 'date', 'btn-secondary': sort !== 'date'}"
+              :class="{'btn-primary': sort === 'date', 'btn-outline-secondary': sort !== 'date'}"
               @click.prevent="sort = 'date'">
         Date
       </button>
       <button class="btn btn-sm btn-block"
-              :class="{'btn-primary': sort === 'note', 'btn-secondary': sort !== 'note'}"
+              :class="{'btn-primary': sort === 'note', 'btn-outline-secondary': sort !== 'note'}"
               @click.prevent="sort = 'note'">
         Note
       </button>
@@ -36,12 +36,12 @@
     <h6 class="mb-1">Ordre de tri</h6>
     <div class="mb-3">
       <button class="btn btn-sm mr-2"
-              :class="{'btn-primary': direction === 'asc', 'btn-secondary': direction !== 'asc'}"
+              :class="{'btn-primary': direction === 'asc', 'btn-outline-secondary': direction !== 'asc'}"
               @click.prevent="direction = 'asc'">
         Asc
       </button>
       <button class="btn btn-sm mr-"
-              :class="{'btn-primary': direction === 'desc', 'btn-secondary': direction !== 'desc'}"
+              :class="{'btn-primary': direction === 'desc', 'btn-outline-secondary': direction !== 'desc'}"
               @click.prevent="direction = 'desc'">
         Desc
       </button>

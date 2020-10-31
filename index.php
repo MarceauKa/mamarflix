@@ -1,12 +1,12 @@
-<?php require 'src/helpers.php'; ?>
+<?php require 'vendor/autoload.php'; ?>
 <!doctype html>
 <html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
     <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>movies2sheet</title>
-    <link rel="stylesheet" href="frontend/dist/app.css">
+    <title>Mamarflix</title>
+    <style type="text/css"><<?= file_get_contents(base_path('frontend/dist/app.css')); ?></style>
 </head>
 <body>
     <div id="app">
@@ -18,10 +18,11 @@
         </div>
       </div>
     </div>
-
-    <script>
-      const m2s = <?php echo file_get_contents(base_path('data/database.json')); ?>
+    <script type="text/javascript">
+      const m2s = <?= file_get_contents(base_path('data/database.json')); ?>
     </script>
-    <script src="frontend/dist/app.js" defer></script>
+    <script type="text/javascript" defer>
+      <?= file_get_contents(base_path('frontend/dist/app.js')); ?>
+    </script>
 </body>
 </html>
