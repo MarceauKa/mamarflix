@@ -1,4 +1,7 @@
-<?php require 'vendor/autoload.php'; ?>
+<?php
+  require 'vendor/autoload.php';
+  $assetsPath = isset($exporting) ? '.mamarflix/' : 'data/images/';
+?>
 <!doctype html>
 <html lang="en">
 <head>
@@ -19,6 +22,7 @@
       </div>
     </div>
     <script type="text/javascript">
+      const assetsPath = '<?= $assetsPath; ?>';
       const m2s = <?= file_get_contents(base_path('data/database.json')); ?>;
     </script>
     <script type="text/javascript" defer>

@@ -48,7 +48,7 @@ class Tmdb
 
         if ($poster) {
             $poster = sprintf('https://image.tmdb.org/t/p/w780%s', $poster);
-            $filename = base_path($this->getPosterFile());
+            $filename = base_path('data/images/' . $this->getPosterFile());
 
             if (false === file_exists($filename)) {
                 file_put_contents($filename, file_get_contents($poster));
@@ -60,7 +60,7 @@ class Tmdb
 
     public function getPosterFile(): string
     {
-        return sprintf('data/images/%s.jpg', $this->movie->getSlug());
+        return sprintf('%s.jpg', $this->movie->getSlug());
     }
 
     public function getReleaseDate(): ?string

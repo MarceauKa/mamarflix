@@ -10,7 +10,7 @@ use Symfony\Component\Process\Process;
 
 class FrontendServe extends Command
 {
-    protected static $defaultName = 'frontend';
+    protected static $defaultName = 'frontend:serve';
 
     protected function configure()
     {
