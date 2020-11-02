@@ -14,9 +14,9 @@ use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Console\Question\Question;
 
-class Tmdb extends Command
+class DatabaseTmdb extends Command
 {
-    protected static $defaultName = 'tmdb';
+    protected static $defaultName = 'database:tmdb';
 
     protected function configure()
     {
@@ -32,7 +32,7 @@ class Tmdb extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $volume = new VolumeReader;
-        $output->writeln('Starting to read ' . $volume->path());
+        $output->writeln(sprintf('<info>Reading %s</info>', $volume->path()));
 
         /** @var Movie[] $files */
         $files = [];
@@ -70,14 +70,14 @@ class Tmdb extends Command
 
                 if (count($tmdb->choices) > 1 || empty($default)) {
                     $helper = $this->getHelper('question');
-                    $text = sprintf('Please enter TMDb id for the movie %s (default: %s)?', $movie->getFilename(), $default ?? '?');
+                    $text = sprintf('<question>Please enter TMDb id for the movie %s (default: %s)</question>', $movie->getFilename(), $default ?? '?');
                     $question = new Question($text, $default);
 
                     $output->writeln('');
                     $answer = $helper->ask($input, $output, $question);
                 } else {
                     $answer = $tmdb->choices[0]['id'];
-                    $output->writeln(sprintf('Movie %s set to %d', $movie->getFilename(), $answer));
+                    $output->writeln(sprintf('<comment>Movie %s set to %d</comment>', $movie->getFilename(), $answer));
                 }
 
                 if (empty($answer)) {
@@ -90,7 +90,7 @@ class Tmdb extends Command
             }
             // Movie is existing
             else {
-                $output->writeln(sprintf('Existing movie %s (%d)', $movie->getFilename(), $tmdb->getId()));
+                $output->writeln(sprintf('<comment>Existing movie %s (%d)</comment>', $movie->getFilename(), $tmdb->getId()));
             }
 
             $files[] = $movie;
@@ -114,10 +114,10 @@ class Tmdb extends Command
             }
 
             $csv->write();
-            $output->writeln('Writed to tmdb.csv');
+            $output->writeln('<info>Writed to tmdb.csv</info>');
         }
 
-        $output->writeln('Done!');
+        $output->writeln('<info>Done!</info>');
 
         return Command::SUCCESS;
     }

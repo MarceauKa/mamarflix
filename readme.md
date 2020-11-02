@@ -59,11 +59,13 @@ Launch a command: `php m2s [COMMAND]`
 
 | Commande | Description | Options |
 |----------|-------------|---------|
-| `frontend` | Lance l'interface web | 
-| `overview` | Liste les films du volume | 
-| `ffprobe` | Génére les infos ffprobe de chaque film dans le volume | `--export` (ou `-e`) : Génère un fichier d'export au format .csv |
-| `tmdb` | Génére les infos TMDb de chaque film dans le volume | `--export` (ou `-e`) : Génère un fichier d'export au format .csv |
-| `debug` | Dump les infos d'un film | Slug du film, ex: `prometheus` |
+| `build` |  |  |
+| `volume` |  |  |
+| `database:build` |  |  | 
+| `database:ffprobe` |  |  | 
+| `database:tmdb` |  |  | 
+| `frontend:build` |  |  |
+| `frontend:serve` |  |  |
 
 ## Useful documentation
 

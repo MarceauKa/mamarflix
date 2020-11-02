@@ -8,7 +8,7 @@ use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Process\PhpExecutableFinder;
 use Symfony\Component\Process\Process;
 
-class Frontend extends Command
+class FrontendServe extends Command
 {
     protected static $defaultName = 'frontend';
 

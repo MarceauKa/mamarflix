@@ -2,8 +2,8 @@
 
 namespace App\Commands;
 
-use App\Utils\Env;
 use Symfony\Component\Console\Command\Command;
+use Symfony\Component\Console\Input\ArrayInput;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 
@@ -13,26 +13,48 @@ class Build extends Command
 
     protected function configure()
     {
-        $this->setDescription('Build frontend');
+        $this->setDescription("Génère tous les fichiers");
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $output->writeln('Generating frontend...');
+        $output->writeln('<info>Start building...</info>');
 
-        ob_start();
-        require base_path('index.php');
-        $content = ob_get_clean();
-        $volume = Env::get('VOLUME_PATH');
-        $writing = file_put_contents($volume . 'mamarflix.html', $content);
+        // Ffprobe
+        $command = $this->getApplication()->find('database:ffprobe');
+        $status = $command->run(new ArrayInput([]), $output);
 
-        if (!$writing) {
-            $output->writeln(sprintf("Can't write to volume %s!", $volume));
-
-            return Command::FAILURE;
+        if ($status === Command::FAILURE) {
+            $output->writeln("<error>Error running database:ffprobe</error>");
+            return $status;
         }
 
-        $output->writeln(sprintf('File %s writed in %s!', 'mamarflix.html', $volume));
+        // Tmdb
+        $command = $this->getApplication()->find('database:tmdb');
+        $status = $command->run(new ArrayInput([]), $output);
+
+        if ($status === Command::FAILURE) {
+            $output->writeln("<error>Error running database:tmdb</error>");
+            return $status;
+        }
+
+        // Database
+        $command = $this->getApplication()->find('database:build');
+        $status = $command->run(new ArrayInput([]), $output);
+
+        if ($status === Command::FAILURE) {
+            $output->writeln("<error>Error running database:build</error>");
+            return $status;
+        }
+
+        // Frontend
+        $command = $this->getApplication()->find('frontend:build');
+        $status = $command->run(new ArrayInput([]), $output);
+
+        if ($status === Command::FAILURE) {
+            $output->writeln("<error>Error running frontend:build</error>");
+            return $status;
+        }
 
         return Command::SUCCESS;
     }

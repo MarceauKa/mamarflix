@@ -8,12 +8,12 @@ require 'vendor/autoload.php';
 
 $application = new Application();
 
-$application->add(new Commands\Overview);
-$application->add(new Commands\Debug);
-$application->add(new Commands\Database);
-$application->add(new Commands\Ffprobe);
-$application->add(new Commands\Tmdb);
-$application->add(new Commands\Frontend);
 $application->add(new Commands\Build);
+$application->add(new Commands\Volume);
+$application->add(new Commands\DatabaseBuild);
+$application->add(new Commands\DatabaseFfprobe);
+$application->add(new Commands\DatabaseTmdb);
+$application->add(new Commands\FrontendServe);
+$application->add(new Commands\FrontendBuild);
 
 $application->run();

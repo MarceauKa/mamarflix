@@ -8,7 +8,7 @@ use Symfony\Component\Finder\Finder;
 class VolumeReader
 {
     protected string $path;
-    protected array $files;
+    protected array $files = [];
 
     public function __construct()
     {

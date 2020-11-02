@@ -12,9 +12,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Database extends Command
+class DatabaseBuild extends Command
 {
-    protected static $defaultName = 'database';
+    protected static $defaultName = 'database:build';
 
     protected function configure()
     {
@@ -30,7 +30,7 @@ class Database extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $volume = new VolumeReader;
-        $output->writeln('Starting to read ' . $volume->path());
+        $output->writeln(sprintf('<info>Reading %s</info>', $volume->path()));
 
         /** @var Movie[] $files */
         $files = [];
@@ -64,7 +64,7 @@ class Database extends Command
         }
 
         $json->write();
-        $output->writeln('Database writed!');
+        $output->writeln('<info>Database writed!</info>');
 
         if ($input->getOption('export')) {
             $csv = new CsvWriter('database');
@@ -98,10 +98,10 @@ class Database extends Command
             }
 
             $csv->write();
-            $output->writeln('Writed to database.csv');
+            $output->writeln('<info>Writed to database.csv</info>');
         }
 
-        $output->writeln('Done!');
+        $output->writeln('<info>Done!</info>');
 
         return 0;
     }

@@ -11,9 +11,9 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 
-class Ffprobe extends Command
+class DatabaseFfprobe extends Command
 {
-    protected static $defaultName = 'ffprobe';
+    protected static $defaultName = 'database:ffprobe';
 
     protected function configure()
     {
@@ -29,7 +29,7 @@ class Ffprobe extends Command
     protected function execute(InputInterface $input, OutputInterface $output)
     {
         $volume = new VolumeReader;
-        $output->writeln('Starting to read ' . $volume->path());
+        $output->writeln(sprintf('<info>Reading %s</info>', $volume->path()));
 
         /** @var Movie[] $files */
         $files = [];
@@ -46,7 +46,7 @@ class Ffprobe extends Command
         $output->writeln('');
 
         if ($input->getOption('export')) {
-            $output->writeln('Generating a CSV export');
+            $output->writeln('<info>Generating a CSV export</info>');
 
             $csv = new CsvWriter('ffprobe');
             $csv->headers(['Name', 'File', 'Size', 'Duration', 'Format', 'HDR', 'Audio', 'Subtitles']);
@@ -59,10 +59,10 @@ class Ffprobe extends Command
             }
 
             $csv->write();
-            $output->writeln('Writed to ffprobe.csv');
+            $output->writeln('<info>Writed to ffprobe.csv</info>');
         }
 
-        $output->writeln('Done!');
+        $output->writeln('<info>Done!</info>');
 
         return Command::SUCCESS;
     }
