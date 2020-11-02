@@ -9,7 +9,7 @@
         </h6>
       </div>
 
-      <span class="badge badge-info">{{ movie.date }}</span>
+      <span class="badge badge-danger">{{ movie.date }}</span>
     </div>
 
     <blockquote class="blockquote flex-grow-1">

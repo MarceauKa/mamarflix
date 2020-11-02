@@ -54,7 +54,10 @@ class Database extends Command
             $tmdb = $movie->getTmdb();
 
             $json->push(array_merge(
-                ['file' => $movie->getFilename()],
+                [
+                    'file' => $movie->getFilename(),
+                    'path' => $movie->getPath(),
+                ],
                 $tmdb->toArray(),
                 $ffprobe->toArray()
             ));

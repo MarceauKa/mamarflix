@@ -17,14 +17,15 @@
 
       <div class="col-12 col-md-8 col-lg-10">
         <div v-if="countResults > 0 && filters.display === 'list'">
-          <div v-for="result in results" class="row mb-4 movie-list-item">
+          <div v-for="result in filtered"
+               :v-key="result.id"
+               class="row mb-4 movie-list-item"
+          >
             <div class="col-12 col-md-4 col-lg-3 position-relative">
-              <img :src="result.poster_file"
-                   loading="lazy"
-                   class="card-img shadow"
-                   :alt="result.title">
-
-              <span :class="`badge position-absolute shadow ${noteClass(result.note)}`"
+              <v-lazy-image :src="result.poster_file"
+                            class="card-img shadow"
+                            :alt="result.title"/>
+              <span :class="`badge position-absolute shadow ${result.note_class}`"
                     style="top: .5rem; left: 1.5rem">
                 {{ result.note }}
               </span>
@@ -40,20 +41,21 @@
 
         <div v-if="countResults > 0 && filters.display === 'grid'">
           <div class="row">
-            <div v-for="result in results"
+            <div v-for="result in filtered"
+                 :v-for="result.key"
                  class="col-12 col-sm-6 col-md-4 col-lg-3 mb-4 movie-grid-item"
                  @click.prevent="selected = result">
-              <div class="position-relative">
-                <img :src="result.poster_file"
-                     loading="lazy"
-                     class="card-img shadow"
-                     :alt="result.title">
-
-                <span :class="`badge position-absolute shadow ${noteClass(result.note)}`"
-                      style="top: .5rem; left: .5rem">
-                  {{ result.note }}
-                </span>
-              </div>
+              <keep-alive>
+                <div class="position-relative">
+                  <v-lazy-image :src="result.poster_file"
+                                class="card-img shadow"
+                                :alt="result.title"/>
+                  <span :class="`badge position-absolute shadow ${result.note_class}`"
+                        style="top: .5rem; left: .5rem">
+                    {{ result.note }}
+                  </span>
+                </div>
+              </keep-alive>
             </div>
           </div>
         </div>
@@ -76,7 +78,7 @@ export default {
       query: '',
       genres: [],
       filters: {
-        display: 'list',
+        display: 'grid',
         sort: 'name',
         direction: 'asc',
         genres: [],
@@ -86,7 +88,10 @@ export default {
   },
 
   mounted() {
-    this.movies = m2s;
+    this.movies = m2s
+    this.movies.forEach((item) => {
+      item.note_class = this.noteClass(item.note)
+    })
     this.getGenres();
   },
 
@@ -102,15 +107,21 @@ export default {
         });
       });
 
+      genres = genres.sort((a, b) => {
+        if (a > b) return 1;
+        else if (a < b) return -1;
+        else return 0;
+      });
+
       this.genres = genres;
     },
 
     noteClass(note) {
       note = parseFloat(note);
 
-      if (note < 10 && note >= 8) {
+      if (note < 10 && note >= 7.5) {
         return 'badge-success text-white';
-      } else if (note < 8 && note >= 6) {
+      } else if (note < 7.5 && note >= 5.5) {
         return 'badge-primary text-white';
       } else {
         return 'badge-warning text-white';
@@ -121,35 +132,39 @@ export default {
       string = string.replace(/^\s+|\s+$/g, '');
       string = string.toLowerCase();
 
-      let from = "ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;";
-      let to   = "aaaaaeeeeeiiiiooooouuuunc------";
+      let from = 'ãàáäâẽèéëêìíïîõòóöôùúüûñç·/_,:;';
+      let to = 'aaaaaeeeeeiiiiooooouuuunc------';
 
-      for (let i = 0, l = from.length ; i < l ; i++) {
+      for (let i = 0, l = from.length; i < l; i++) {
         string = string.replace(new RegExp(from.charAt(i), 'g'), to.charAt(i));
       }
 
-      string = string.replace(/[^a-z0-9 -]/g, '')
-            .replace(/\s+/g, '-')
-            .replace(/-+/g, '-');
+      string = string.replace(/[^a-z0-9 -]/g, '').replace(/\s+/g, '-').replace(/-+/g, '-');
 
       return string;
     },
   },
 
   computed: {
-    results() {
-      let query = this.query;
-      let genres = this.filters.genres;
+    filtered() {
+      let movies = this.movies;
       let sort = this.filters.sort;
       let direction = this.filters.direction;
-      let movies = this.movies;
+      let query = this.query;
+      let genres = this.filters.genres;
 
       if (query) {
         let regexp = new RegExp(`${query}`, 'giu');
 
         movies = movies.filter((item) => {
-          return item.title.match(regexp) !== null
-              || item.original_title.match(regexp) !== null;
+          let title = item.title || '';
+          let original = item.original || '';
+          let format = item.original || '';
+          let resume = item.resume || '';
+          return title.match(regexp) !== null
+              || original.match(regexp) !== null
+              || format.match(regexp) !== null
+              || resume.match(regexp) !== null;
         });
       }
 
@@ -188,7 +203,7 @@ export default {
     },
 
     countResults() {
-      return this.results.length;
+      return this.filtered.length;
     },
 
     countMovies() {

@@ -19,7 +19,7 @@
       </div>
     </div>
     <script type="text/javascript">
-      const m2s = <?= file_get_contents(base_path('data/database.json')); ?>
+      const m2s = <?= file_get_contents(base_path('data/database.json')); ?>;
     </script>
     <script type="text/javascript" defer>
       <?= file_get_contents(base_path('frontend/dist/app.js')); ?>

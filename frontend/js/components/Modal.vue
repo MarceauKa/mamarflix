@@ -6,6 +6,7 @@
           <movie-info :movie="movie" :full="true"></movie-info>
         </div>
         <div class="modal-footer">
+          <a :href="`file://${movie.path}`" class="btn btn-sm btn-danger" target="_blank">Lire le film</a>
           <button type="button" class="btn btn-sm btn-secondary" data-dismiss="modal">Fermer</button>
         </div>
       </div>
@@ -37,7 +38,7 @@ export default {
         $('#movieModal').modal();
         $('#movieModal').on('hidden.bs.modal', (event) => {
           this.open = false;
-          this.$emit('closed')
+          this.$emit('closed');
         });
       });
     },

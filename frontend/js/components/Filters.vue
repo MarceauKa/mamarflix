@@ -1,57 +1,73 @@
 <template>
   <div class="d-flex flex-column sticky-top" style="top: 10px;">
     <h6 class="mb-1">Affichage</h6>
-    <div class="d-flex mb-3">
-      <button class="btn btn-sm mr-2"
-              :class="{'btn-primary': display === 'grid', 'btn-outline-secondary': display !== 'grid'}"
+    <div class="btn-group btn-group-sm mb-3">
+      <button class="btn"
+              :class="{'btn-danger': display === 'grid', 'btn-outline-danger': display !== 'grid'}"
               @click.prevent="display = 'grid'">
         Grille
       </button>
-      <button class="btn btn-sm"
-              :class="{'btn-primary': display === 'list', 'btn-outline-secondary': display !== 'list'}"
+      <button class="btn"
+              :class="{'btn-danger': display === 'list', 'btn-outline-danger': display !== 'list'}"
               @click.prevent="display = 'list'">
         Liste
       </button>
     </div>
 
     <h6 class="mb-1">Trier par</h6>
-    <div class="mb-3">
-      <button class="btn btn-sm btn-block"
-              :class="{'btn-primary': sort === 'name', 'btn-outline-secondary': sort !== 'name'}"
+    <div class="btn-group-vertical btn-group-sm mb-3">
+      <button class="btn btn-block"
+              :class="{'btn-danger': sort === 'name', 'btn-outline-danger': sort !== 'name'}"
               @click.prevent="sort = 'name'">
         Nom
       </button>
-      <button class="btn btn-sm btn-block mr-2"
-              :class="{'btn-primary': sort === 'date', 'btn-outline-secondary': sort !== 'date'}"
+      <button class="btn btn-block mr-2"
+              :class="{'btn-danger': sort === 'date', 'btn-outline-danger': sort !== 'date'}"
               @click.prevent="sort = 'date'">
         Date
       </button>
-      <button class="btn btn-sm btn-block"
-              :class="{'btn-primary': sort === 'note', 'btn-outline-secondary': sort !== 'note'}"
+      <button class="btn btn-block"
+              :class="{'btn-danger': sort === 'note', 'btn-outline-danger': sort !== 'note'}"
               @click.prevent="sort = 'note'">
         Note
       </button>
     </div>
 
     <h6 class="mb-1">Ordre de tri</h6>
-    <div class="mb-3">
-      <button class="btn btn-sm mr-2"
-              :class="{'btn-primary': direction === 'asc', 'btn-outline-secondary': direction !== 'asc'}"
+    <div class="btn-group btn-group-sm mb-3">
+      <button class="btn"
+              :class="{'btn-danger': direction === 'asc', 'btn-outline-danger': direction !== 'asc'}"
               @click.prevent="direction = 'asc'">
         Asc
       </button>
-      <button class="btn btn-sm mr-"
-              :class="{'btn-primary': direction === 'desc', 'btn-outline-secondary': direction !== 'desc'}"
+      <button class="btn"
+              :class="{'btn-danger': direction === 'desc', 'btn-outline-danger': direction !== 'desc'}"
               @click.prevent="direction = 'desc'">
         Desc
       </button>
     </div>
 
-    <h6 class="mb-1">Genre</h6>
+    <h6 class="mb-1 d-flex justify-content-between align-items-center">
+      Genre
+      <a @click.prevent="filteredGenres = []"
+         v-if="filteredGenres.length > 0"
+         class="small"
+         href="#">
+        Effacer
+      </a>
+    </h6>
     <div class="d-flex flex-column">
-      <div v-for="(genre, index) in genres" class="form-check">
-        <input class="form-check-input" type="checkbox" :value="genre" :id="`genre${index}`" v-model="filteredGenres">
-        <label class="form-check-label" :for="`genre${index}`">{{ genre }}</label>
+      <div class="form-group">
+        <select v-model="filteredGenres"
+                class="form-control"
+                :size="genres.length"
+                multiple>
+          <option v-for="(genre, index) in genres"
+                  :key="index"
+                  :value="genre"
+          >{{ genre }}
+          </option>
+        </select>
       </div>
     </div>
   </div>
@@ -68,7 +84,7 @@ export default {
 
   data() {
     return {
-      display: 'list',
+      display: 'grid',
       sort: 'name',
       direction: 'asc',
       filteredGenres: [],
@@ -81,27 +97,27 @@ export default {
         display: this.display,
         sort: this.sort,
         direction: this.direction,
-        genres: this.filteredGenres
+        genres: this.filteredGenres,
       });
     },
   },
 
   watch: {
     display(value) {
-      this.update()
+      this.update();
     },
 
     sort() {
-      this.update()
+      this.update();
     },
 
     direction() {
-      this.update()
+      this.update();
     },
 
     filteredGenres() {
-      this.update()
-    }
+      this.update();
+    },
   },
 };
 </script>
