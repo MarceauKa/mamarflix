@@ -23,6 +23,7 @@
     </div>
     <script type="text/javascript">
       const assetsPath = '<?= $assetsPath; ?>';
+      const demo = <?= isset($demo) && $demo ? 'true' : 'false'; ?>;
       const m2s = <?= file_get_contents(base_path('data/database.json')); ?>;
     </script>
     <script type="text/javascript" defer>

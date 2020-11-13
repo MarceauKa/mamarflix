@@ -1,8 +1,8 @@
-# Movies2sheet
+# Mamarflix
 
-Transform your **own device full of movies** in your own **\*\*\*flix**.
+Transform your **own device full of movies** in your own local **Netflix**. Want a demo? [Here is it](https://marceauka.github.io/mamarflix) (movies not included).
 
-⚠️ **UNDER ACTIVE DEVELOPMENT**
+⚠️ This tool does not encourage anyone to illegally download movies. I made this because I have a BIG collection of DVD (and Blu-ray) gathering dust. If you want to rip your physic movies, look at an [other package](https://github.com/MarceauKa/ffmpeg-generator) I made.
 
 ## Use case
 
@@ -19,9 +19,9 @@ This package is for my own usage but I share it with all of you with ♥️
 ## Requirements
 
 - PHP >= 7.4
-- Composer
-- FFPROBE
-- A TMDb API Key
+- [Composer](https://getcomposer.org/)
+- [ffprobe](https://ffmpeg.org/ffprobe.html)
+- A [TMDb API Key](https://www.themoviedb.org/documentation/api)
 
 ### File names
 
@@ -36,7 +36,7 @@ name [info] 2019.ext
 ## Installation
 
 ```
-git clone https://github.com/MarceauKa/movies2sheet && cd movies2sheet
+git clone https://github.com/MarceauKa/mamarflix && cd mamarflix
 composer install
 cp .env.example .env
 ```
@@ -45,13 +45,13 @@ cp .env.example .env
 
 Open the `.env` file then edit:
 
-| Config | Description |
-|--------|-------------|
-| VOLUME_PATH |  |
-| EXTENSIONS |  |
-| FFPROBE_BIN |  |
-| API_LANG |  |
-| API_KEY |  |
+| Config | Description | Default |
+|--------|-------------|---------|
+| VOLUME_PATH | Path of your volume | `/Volumes/` |
+| EXTENSIONS | File extensions used to find movies in the volume | `.mkv,.avi,.mov,.mp4` |
+| FFPROBE_BIN | Path to ffprobe binary | `/usr/local/bin/ffprobe` |
+| API_LANG | Lang to be used for movies (and posters) | `fr` |
+| API_KEY | Your TMDb API key | |
 
 ## Commands
 
@@ -59,13 +59,13 @@ Launch a command: `php m2s [COMMAND]`
 
 | Commande | Description | Options |
 |----------|-------------|---------|
-| `build` |  |  |
-| `volume` |  |  |
-| `database:build` |  |  | 
-| `database:ffprobe` |  |  | 
-| `database:tmdb` |  |  | 
-| `frontend:build` |  |  |
-| `frontend:serve` |  |  |
+| `build` | Build the entire app (`database:ffprobe`, `database:tmdb` and `frontend:build`) | - |
+| `volume` | List movies on the volume | - |
+| `database:build` | Build `data/database.json` from `database:ffprobe` and `database:tmdb` |  | 
+| `database:ffprobe` | Get ffprobe data from each movies in the volume | `-e` will export result in `data/exports/ffprobe.csv` | 
+| `database:tmdb` | Interactively retrieve movies data from TMDb | `-e` will export result in `data/exports/tmdb.csv` | 
+| `frontend:build` | Build app frontend to the volume, copying all movies posters | `-d` (dev only) build public demo into `docs/` |
+| `frontend:serve` | (dev only) Start the frontend server | - |
 
 ## Useful documentation
 

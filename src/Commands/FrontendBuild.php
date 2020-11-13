@@ -6,6 +6,7 @@ use App\Utils\Env;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputInterface;
+use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
 use Symfony\Component\Finder\Finder;
 
@@ -16,10 +17,17 @@ class FrontendBuild extends Command
     protected function configure()
     {
         $this->setDescription('Build frontend');
+        $this->addOption(
+            'demo',
+            'd',
+            InputOption::VALUE_NONE,
+            "Génére le build pour la démo",
+        );
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
     {
+        $demo = $input->getOption('demo');
         $output->writeln('<info>Generating frontend</info>');
 
         ob_start();
@@ -28,7 +36,8 @@ class FrontendBuild extends Command
         $content = ob_get_clean();
 
         $volume = Env::get('VOLUME_PATH');
-        $writing = file_put_contents($volume . 'mamarflix.html', $content);
+        $file = $demo ? base_path('docs/index.html') : sprintf('%s%s', $volume, 'mamarflix.html');
+        $writing = file_put_contents($file, $content);
 
         if (!$writing) {
             $output->writeln(sprintf("<error>Can't write to volume %s</error>", $volume));
@@ -36,38 +45,41 @@ class FrontendBuild extends Command
             return Command::FAILURE;
         }
 
-        $output->writeln(sprintf('<info>File %s writed in %s</info>', 'mamarflix.html', $volume));
-        $output->writeln('<info>Copying images</info>');
+        $output->writeln(sprintf('<info>File %s writed in %s</info>', $file, $volume));
 
-        $finder = new Finder();
-        $finder->files()
-            ->name('*.jpg')
-            ->in(base_path('data/images/'));
+        if (false === $demo) {
+            $output->writeln('<info>Copying images</info>');
 
-        $images = iterator_to_array($finder);
-        $path = sprintf('%s.mamarflix/', $volume);
+            $finder = new Finder();
+            $finder->files()
+                ->name('*.jpg')
+                ->in(base_path('data/images/'));
 
-        if (false === is_dir($path)) {
-            mkdir($path);
-        }
+            $images = iterator_to_array($finder);
+            $path = sprintf('%s.mamarflix/', $volume);
 
-        $bar = new ProgressBar($output, count($images));
-        $bar->start();
-
-        foreach ($images as $image) {
-            $filename = $path . $image->getFilename();
-
-            if (false === file_exists($filename)) {
-                file_put_contents($filename, file_get_contents($image->getPathname()));
+            if (false === is_dir($path)) {
+                mkdir($path);
             }
 
-            $bar->advance();
+            $bar = new ProgressBar($output, count($images));
+            $bar->start();
+
+            foreach ($images as $image) {
+                $filename = $path . $image->getFilename();
+
+                if (false === file_exists($filename)) {
+                    file_put_contents($filename, file_get_contents($image->getPathname()));
+                }
+
+                $bar->advance();
+            }
+
+            $bar->finish();
+            $output->writeln('');
+
+            $output->writeln('<info>Images copied!</info>');
         }
-
-        $bar->finish();
-        $output->writeln('');
-
-        $output->writeln('<info>Images copied!</info>');
 
         return Command::SUCCESS;
     }

@@ -22,7 +22,7 @@
                class="row mb-4 movie-list-item"
           >
             <div class="col-12 col-md-4 col-lg-3 position-relative">
-              <v-lazy-image :src="`${assetsPath}${result.poster_file}`"
+              <v-lazy-image :src="result.img_url"
                             class="card-img shadow"
                             :alt="result.title"/>
               <span :class="`badge position-absolute shadow ${result.note_class}`"
@@ -47,7 +47,7 @@
                  @click.prevent="selected = result">
               <keep-alive>
                 <div class="position-relative">
-                  <v-lazy-image :src="`${assetsPath}${result.poster_file}`"
+                  <v-lazy-image :src="result.img_url"
                                 class="card-img shadow"
                                 :alt="result.title"/>
                   <span :class="`badge position-absolute shadow ${result.note_class}`"
@@ -85,14 +85,17 @@ export default {
       },
       selected: null,
       assetsPath: '',
+      demo: false,
     };
   },
 
   mounted() {
     this.assetsPath = assetsPath;
+    this.demo = demo;
     this.movies = m2s;
     this.movies.forEach((item) => {
       item.note_class = this.noteClass(item.note);
+      item.img_url = this.demo ? item.poster_url : `${this.assetsPath}${item.poster_file}`;
     });
     this.getGenres();
   },
