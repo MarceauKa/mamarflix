@@ -1,3 +1,5 @@
+![Mamarflix](https://github.com/MarceauKa/mamarflix/blob/master/frontend/logo.png?raw=true)
+
 # Mamarflix
 
 Transform your **own device full of movies** in your own local **Netflix**. Want a demo? [Here is it](https://marceauka.github.io/mamarflix/demo.html) (movies not included).
