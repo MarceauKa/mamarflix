@@ -36,7 +36,7 @@ class FrontendBuild extends Command
         $content = ob_get_clean();
 
         $volume = Env::get('VOLUME_PATH');
-        $file = $demo ? base_path('docs/index.html') : sprintf('%s%s', $volume, 'mamarflix.html');
+        $file = $demo ? base_path('demo.html') : sprintf('%s%s', $volume, 'mamarflix.html');
         $writing = file_put_contents($file, $content);
 
         if (!$writing) {

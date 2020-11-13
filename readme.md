@@ -1,6 +1,6 @@
 # Mamarflix
 
-Transform your **own device full of movies** in your own local **Netflix**. Want a demo? [Here is it](https://marceauka.github.io/mamarflix) (movies not included).
+Transform your **own device full of movies** in your own local **Netflix**. Want a demo? [Here is it](https://marceauka.github.io/mamarflix/demo.html) (movies not included).
 
 ⚠️ This tool does not encourage anyone to illegally download movies. I made this because I have a BIG collection of DVD (and Blu-ray) gathering dust. If you want to rip your physic movies, look at an [other package](https://github.com/MarceauKa/ffmpeg-generator) I made.
 

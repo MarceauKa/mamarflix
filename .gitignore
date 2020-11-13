@@ -2,6 +2,5 @@
 node_modules/
 vendor/
 .env
-*.html
 composer.lock
 package-lock.json
